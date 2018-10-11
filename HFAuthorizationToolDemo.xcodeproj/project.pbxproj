@@ -46,6 +46,7 @@
 		4B4F83A1216DDAD000B8452F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B4F83A8216DEB0900B8452F /* HFAuthorizationTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFAuthorizationTool.h; sourceTree = "<group>"; };
 		4B4F83A9216DEB0900B8452F /* HFAuthorizationTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFAuthorizationTool.m; sourceTree = "<group>"; };
+		4BD85456216F94AF00341B66 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +98,7 @@
 				4B4F83A8216DEB0900B8452F /* HFAuthorizationTool.h */,
 				4B4F83A9216DEB0900B8452F /* HFAuthorizationTool.m */,
 				4B4F8398216DDAD000B8452F /* Main.storyboard */,
+				4BD85456216F94AF00341B66 /* README.md */,
 				4B4F839B216DDAD000B8452F /* Assets.xcassets */,
 				4B4F839D216DDAD000B8452F /* LaunchScreen.storyboard */,
 				4B4F83A0216DDAD000B8452F /* Info.plist */,
