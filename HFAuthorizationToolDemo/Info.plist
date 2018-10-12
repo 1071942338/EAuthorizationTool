@@ -54,6 +54,10 @@
 	</array>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>申请使用语言识别</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>申请使用健康分享</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>申请使用健康数据</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

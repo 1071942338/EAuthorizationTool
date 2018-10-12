@@ -65,6 +65,7 @@ typedef void(^AuthorizationResultBlock)(BOOL result);
 //-(void)requestBluetoothAuthorization:(AuthorizationResultBlock)result;
 
 //6、健康
+-(void)requestHealthAuthorization:(AuthorizationResultBlock)result;
 
 //7、HomeKit
 

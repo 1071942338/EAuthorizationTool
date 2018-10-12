@@ -37,10 +37,10 @@
 //        NSLog(@"requestAlwaysAuthorization授权成功");
 //    }];
     
-    [self.tool requestPhotoLibraryAuthorization:^(BOOL result) {
-        NSLog(@"requestPhotoLibraryAuthorization授权成功");
-
-    }];
+//    [self.tool requestPhotoLibraryAuthorization:^(BOOL result) {
+//        NSLog(@"requestPhotoLibraryAuthorization授权成功");
+//
+//    }];
     
 //    [self.tool requestCameraAuthorization:^(BOOL result) {
 //        NSLog(@"requestCameraAuthorization授权成功");
@@ -56,6 +56,10 @@
 //        NSLog(@"requestBluetoothAuthorization授权成功");
 //
 //    }];
+    [self.tool requestHealthAuthorization:^(BOOL result) {
+        NSLog(@"requestHealthAuthorization授权成功");
+        
+    }];
     
 //        [self.tool requestRemindersAuthorization:^(BOOL result) {
 //            NSLog(@"requestRemindersAuthorization授权成功");

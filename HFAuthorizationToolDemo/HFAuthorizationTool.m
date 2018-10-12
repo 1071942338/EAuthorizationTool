@@ -53,11 +53,11 @@ NSString *const NSVideoSubscriberAccountUsageDescription    = @"NSVideoSubscribe
 @property(nonatomic,strong)AVAudioSession *audioSession;
 @property(nonatomic,copy)AuthorizationResultBlock microphoneResultBlock;
 
-
 @property(nonatomic,strong)CBCentralManager *centralManager;
 @property(nonatomic,copy)AuthorizationResultBlock bluetoothResultBlock;
 
 @property(nonatomic,strong)HKHealthStore *healthStore;
+@property(nonatomic,copy)AuthorizationResultBlock healthResultBlock;
 
 @property(nonatomic,strong)EKEventStore *remindersEventStore;
 @property(nonatomic,copy)AuthorizationResultBlock remindersResultBlock;
@@ -333,30 +333,59 @@ NSString *const NSVideoSubscriberAccountUsageDescription    = @"NSVideoSubscribe
         self.bluetoothResultBlock = result;
     }
     
+//    CBManagerStateUnknown = 0,
+//    CBManagerStateResetting,
+//    CBManagerStateUnsupported,
+//    CBManagerStateUnauthorized,
+//    CBManagerStatePoweredOff,
+//    CBManagerStatePoweredOn,
+    
     //1.检测Key
     [self isHaveUsageDescriptionInPlistByKey:NSBluetoothPeripheralUsageDescription];
     //2.获取状态
-    CBPeripheralManagerAuthorizationStatus status = [CBPeripheralManager authorizationStatus];
+    CBManagerState status =  [self.centralManager state];
     //3.根据状态进行逻辑选择
-    [self reportBluetoothServicesAuthorizationStatus:status];
+//    [self reportBluetoothServicesAuthorizationStatus:status];
     
 }
 
-- (void)reportBluetoothServicesAuthorizationStatus:(CBPeripheralManagerAuthorizationStatus)status{
-    if (status == CBPeripheralManagerAuthorizationStatusNotDetermined) {
-        //未作出选择:请求用户授权
+- (void)reportBluetoothServicesAuthorizationStatus:(CBManagerState)status{
+    if (status == CBManagerStateUnknown) {
+        //状态未知，过一会变化:请求用户授权
+//        if (self.bluetoothResultBlock) {
+//            [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+//        }
+//        [self openSettingApp];
+        CBManagerState status =  [self.centralManager state];
+        [self reportBluetoothServicesAuthorizationStatus:status];
+
+    }
+    else if (status == CBManagerStateResetting){
+        //重置:打开设置页面请求用户授权
+        [self openSettingApp];
+    }
+    else if (status == CBManagerStateUnsupported){
+        //不支持:打开设置页面请求用户授权
+//        [self openSettingApp];
+        NSLog(@"不支持蓝牙功能");
+    }
+    else if (status == CBManagerStateUnauthorized){
+        //未授权:打开设置页面请求用户授权
+//        [self openSettingApp];
         if (self.bluetoothResultBlock) {
-            
             [self.centralManager scanForPeripheralsWithServices:nil options:nil];
         }
     }
-    else if (status == CBPeripheralManagerAuthorizationStatusRestricted){
-        //无权使用:打开设置页面请求用户授权
+    else if (status == CBManagerStatePoweredOff){
+        //未打开:打开设置页面请求打开
         [self openSettingApp];
     }
-    else if (status == CBPeripheralManagerAuthorizationStatusDenied){
-        //拒绝使用:打开设置页面请求用户授权
-        [self openSettingApp];
+    else if (status == CBManagerStatePoweredOn){
+        //已打开:打开设置页面请求用户授权
+//        [self openSettingApp];
+        if (self.bluetoothResultBlock) {
+            [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+        }
     }
     else if (status == CBPeripheralManagerAuthorizationStatusAuthorized){
         //授权随时使用:打开设置页面请求用户更改授权
@@ -371,10 +400,66 @@ NSString *const NSVideoSubscriberAccountUsageDescription    = @"NSVideoSubscribe
 }
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
+    CBManagerState status = [central state];
+
+    NSLog(@"centralManagerDidUpdateState:%ld",status);
     
+    if (status == CBManagerStateUnknown) {
+        //状态未知，过一会变化:请求用户授权
+        //        if (self.bluetoothResultBlock) {
+        //            [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+        //        }
+        //        [self openSettingApp];
+        CBManagerState status =  [self.centralManager state];
+        [self reportBluetoothServicesAuthorizationStatus:status];
+        
+    }
+    else if (status == CBManagerStateResetting){
+        //重置:打开设置页面请求用户授权
+        [self openSettingApp];
+    }
+    else if (status == CBManagerStateUnsupported){
+        //不支持:打开设置页面请求用户授权
+        //        [self openSettingApp];
+        NSLog(@"不支持蓝牙功能");
+    }
+    else if (status == CBManagerStateUnauthorized){
+        //未授权:打开设置页面请求用户授权
+        //        [self openSettingApp];
+        if (self.bluetoothResultBlock) {
+            [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+        }
+    }
+    else if (status == CBManagerStatePoweredOff){
+        //未打开:打开设置页面请求打开
+//        [self openSettingApp];
+    }
+    else if (status == CBManagerStatePoweredOn){
+        //已打开:打开设置页面请求用户授权
+        //        [self openSettingApp];
+        if (self.bluetoothResultBlock) {
+            NSLog(@"%@",@"求蓝牙权限");
+            [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+        }
+//        [self openSettingApp];
+        [[[CBPeripheralManager alloc] init] startAdvertising:nil];
+
+    }
+    else if (status == CBPeripheralManagerAuthorizationStatusAuthorized){
+        //授权随时使用:打开设置页面请求用户更改授权
+        if (self.bluetoothResultBlock) {
+            self.bluetoothResultBlock(YES);
+            self.bluetoothResultBlock = nil;
+        }
+    }
+    else{
+        //
+    }
 }
-
-
+- (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *, id> *)advertisementData RSSI:(NSNumber *)RSSI
+{
+    NSLog(@"didDiscoverPeripheral:%@",advertisementData);
+}
 #pragma mark - 健康
 + (BOOL)isHealthDataAvailable
 {
@@ -384,7 +469,7 @@ NSString *const NSVideoSubscriberAccountUsageDescription    = @"NSVideoSubscribe
 -(void)requestHealthAuthorization:(AuthorizationResultBlock)result
 {
     if (result) {
-        self.bluetoothResultBlock = result;
+        self.healthResultBlock = result;
     }
     
     //1.检测Key
@@ -401,9 +486,13 @@ NSString *const NSVideoSubscriberAccountUsageDescription    = @"NSVideoSubscribe
 - (void)reportHealthServicesAuthorizationStatus:(HKAuthorizationStatus)status{
     if (status == HKAuthorizationStatusNotDetermined) {
         //未作出选择:请求用户授权
-        if (self.bluetoothResultBlock) {
-            
-            [self.centralManager scanForPeripheralsWithServices:nil options:nil];
+        if (self.healthResultBlock) {
+            HKQuantityType *type = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
+            [self.healthStore requestAuthorizationToShareTypes:[NSSet setWithObject:type] readTypes:[NSSet setWithObject:type] completion:^(BOOL success, NSError * _Nullable error) {
+                
+                HKAuthorizationStatus status = [self.healthStore authorizationStatusForType:type];
+                [self reportHealthServicesAuthorizationStatus:status];
+            }];
         }
     }
     else if (status == HKAuthorizationStatusSharingDenied){
@@ -412,9 +501,9 @@ NSString *const NSVideoSubscriberAccountUsageDescription    = @"NSVideoSubscribe
     }
     else if (status == HKAuthorizationStatusSharingAuthorized){
         //授权随时使用:打开设置页面请求用户更改授权
-        if (self.bluetoothResultBlock) {
-            self.bluetoothResultBlock(YES);
-            self.bluetoothResultBlock = nil;
+        if (self.healthResultBlock) {
+            self.healthResultBlock(YES);
+            self.healthResultBlock = nil;
         }
     }
     else{
@@ -812,9 +901,12 @@ NSString *const NSVideoSubscriberAccountUsageDescription    = @"NSVideoSubscribe
     }
     return _audioSession;
 }
+
+
 -(CBCentralManager *)centralManager{
     if (!_centralManager) {
-        _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+        NSDictionary *options = @{CBCentralManagerOptionShowPowerAlertKey:[NSNumber numberWithBool:YES]};
+        _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:options];
     }
     return _centralManager;
 }

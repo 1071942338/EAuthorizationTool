@@ -15,6 +15,7 @@
 		4B4F839F216DDAD000B8452F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4F839D216DDAD000B8452F /* LaunchScreen.storyboard */; };
 		4B4F83A2216DDAD000B8452F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F83A1216DDAD000B8452F /* main.m */; };
 		4B4F83AA216DEB0900B8452F /* HFAuthorizationTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4F83A9216DEB0900B8452F /* HFAuthorizationTool.m */; };
+		4BD405F02170ABC700020429 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD405EF2170ABC700020429 /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,6 +47,7 @@
 		4B4F83A1216DDAD000B8452F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4B4F83A8216DEB0900B8452F /* HFAuthorizationTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFAuthorizationTool.h; sourceTree = "<group>"; };
 		4B4F83A9216DEB0900B8452F /* HFAuthorizationTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFAuthorizationTool.m; sourceTree = "<group>"; };
+		4BD405EF2170ABC700020429 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		4BD85456216F94AF00341B66 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -55,6 +57,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B0045D1216F01F70034128A /* Contacts.framework in Frameworks */,
+				4BD405F02170ABC700020429 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +67,7 @@
 		4B0045CF216F01F60034128A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BD405EF2170ABC700020429 /* HealthKit.framework */,
 				4B0045D0216F01F70034128A /* Contacts.framework */,
 				4B0045E1216F37390034128A /* IntentsUI.framework */,
 			);
@@ -142,6 +146,9 @@
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
+							};
+							com.apple.HealthKit = {
+								enabled = 1;
 							};
 							com.apple.InterAppAudio = {
 								enabled = 0;
